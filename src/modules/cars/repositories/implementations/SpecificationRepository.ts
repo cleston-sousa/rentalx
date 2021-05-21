@@ -1,40 +1,35 @@
-import { Specification } from '../../model/Specification';
-import { ICreatecSpecificationDTO, ISpecificationRepository } from '../ISpecificationRepository';
+import { getRepository, Repository } from "typeorm";
 
-
+import { Specification } from "../../entities/Specification";
+import {
+    ICreatecSpecificationDTO,
+    ISpecificationRepository,
+} from "../ISpecificationRepository";
 
 class SpecificationRepository implements ISpecificationRepository {
+    private repository: Repository<Specification>;
 
-    private specifications: Specification[];
-
-    private constructor() {
-        this.specifications = [];
-    }
-    list(): Specification[] {
-        return this.specifications;
+    constructor() {
+        this.repository = getRepository(Specification);
     }
 
-    private static instance: SpecificationRepository;
-    public static getInstance(): SpecificationRepository {
-        if (!SpecificationRepository.instance)
-            SpecificationRepository.instance = new SpecificationRepository();
-        return SpecificationRepository.instance;
+    async list(): Promise<Specification[]> {
+        const specifications = await this.repository.find();
+        return specifications;
     }
 
-    create({ name, description }: ICreatecSpecificationDTO): void {
-
-        const specification = new Specification();
-
-        Object.assign(specification, { name, description, create_at: new Date() });
-
-        this.specifications.push(specification);
-
+    async create({
+        name,
+        description,
+    }: ICreatecSpecificationDTO): Promise<void> {
+        const specification = this.repository.create({ name, description });
+        await this.repository.save(specification);
     }
 
-    finByName(name: string): Specification {
-        return this.specifications.find(item => item.name === name);
+    async finByName(name: string): Promise<Specification> {
+        const specification = await this.repository.findOne({ name });
+        return specification;
     }
 }
-
 
 export { SpecificationRepository };
