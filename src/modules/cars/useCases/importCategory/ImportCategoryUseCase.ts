@@ -2,8 +2,8 @@ import csvParse from "csv-parse";
 import fs from "fs";
 import { inject, injectable } from "tsyringe";
 
-import { AppError } from "../../../../errors/AppError";
-import { ICategoriesRepository } from "../../repositories/ICategoriesRepository";
+import { ICategoriesRepository } from "@modules/cars/repositories/ICategoriesRepository";
+import { AppError } from "@shared/errors/AppError";
 
 interface IImportCategory {
     name: string;
@@ -17,7 +17,9 @@ class ImportCategoryUseCase {
         private categoriesRepository: ICategoriesRepository
     ) { }
 
-    loadCategories(file: Express.Multer.File): Promise<IImportCategory[]> {
+    async loadCategories(
+        file: Express.Multer.File
+    ): Promise<IImportCategory[]> {
         return new Promise((resolve, reject) => {
             const categories: IImportCategory[] = [];
             const stream = fs.createReadStream(file.path);
@@ -28,8 +30,8 @@ class ImportCategoryUseCase {
                     const [name, description] = line;
                     categories.push({ name, description });
                 })
-                .on("end", () => {
-                    fs.promises.unlink(file.path);
+                .on("end", async () => {
+                    await fs.promises.unlink(file.path);
                     resolve(categories);
                 })
                 .on("error", (err) => {
@@ -40,14 +42,19 @@ class ImportCategoryUseCase {
 
     async execute(file: Express.Multer.File): Promise<void> {
         const categories = await this.loadCategories(file);
-        categories.map(async (item) => {
+
+        const promises = categories.map(async (item, index) => {
             const { name, description } = item;
             const alreadyExists = await this.categoriesRepository.findByName(
                 name
             );
-            if (alreadyExists) throw new AppError("Category already exists!");
+            if (alreadyExists) {
+                throw new AppError(`Line ${index}: Category already exists!`);
+            }
             await this.categoriesRepository.create({ name, description });
         });
+
+        await Promise.all(promises);
     }
 }
 

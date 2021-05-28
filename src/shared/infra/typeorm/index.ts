@@ -1,5 +1,6 @@
 import { createConnection, getConnectionOptions } from "typeorm";
 
+// docker config
 interface IOptions {
     host: string;
 }
@@ -11,3 +12,6 @@ getConnectionOptions().then((options) => {
         ...options,
     });
 });
+
+// local
+// createConnection();

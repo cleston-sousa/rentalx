@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
 import { container } from "tsyringe";
 
-import { AppError } from "../errors/AppError";
-import { UsersRepository } from "../modules/accounts/repositories/implementations/UsersRepository";
+import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepository";
+import { AppError } from "@shared/errors/AppError";
 
 interface IPayload {
     sub: string;
@@ -23,7 +23,8 @@ export async function ensureAuthenticated(
     try {
         const { sub: user_id } = verify(token, "w3e4r5t6y7u8i9o0") as IPayload;
 
-        const usersRepository = new UsersRepository();
+        const usersRepository =
+            container.resolve<IUsersRepository>("usersRepository");
         const user = usersRepository.findById(user_id);
 
         if (!user) throw new AppError("Invalid user", 401);
