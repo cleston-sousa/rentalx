@@ -25,7 +25,7 @@ export async function ensureAuthenticated(
 
         const usersRepository =
             container.resolve<IUsersRepository>("usersRepository");
-        const user = usersRepository.findById(user_id);
+        const user = await usersRepository.findById(user_id);
 
         if (!user) throw new AppError("Invalid user", 401);
 
