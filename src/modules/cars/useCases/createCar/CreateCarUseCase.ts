@@ -37,7 +37,7 @@ class CreateCarUseCase {
             throw new AppError("car already registered");
         }
 
-        const newCar = await this.carsRepository.create({
+        const newCar = await this.carsRepository.save({
             name,
             description,
             daily_rate,

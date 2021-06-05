@@ -16,7 +16,10 @@ class Specification {
     created_at: Date;
 
     constructor() {
-        if (!this.id) this.id = uuidv4();
+        if (!this.id) {
+            this.id = uuidv4();
+            this.created_at = new Date();
+        }
     }
 }
 

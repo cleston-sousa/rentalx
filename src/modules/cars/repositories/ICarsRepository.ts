@@ -3,7 +3,9 @@ import { IListAvailableCarsDTO } from "@modules/cars/dtos/IListAvailableCarsDTO"
 import { Car } from "@modules/cars/infra/typeorm/entities/Car";
 
 interface ICarsRepository {
-    create(data: ICreateCarDTO): Promise<Car>;
+    findById(id: string): Promise<Car>;
+
+    save(data: ICreateCarDTO): Promise<Car>;
 
     findByLicensePlate(license_plate: string): Promise<Car>;
 

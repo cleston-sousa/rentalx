@@ -12,7 +12,7 @@ describe("list cars", () => {
     });
 
     it("given_with_whenExecute_thenReturnListOfAvailableCar", async () => {
-        const car1 = await carsRepository.create({
+        const car1 = await carsRepository.save({
             name: "Tucs Power",
             description: "Super legal",
             daily_rate: 250,
@@ -22,7 +22,7 @@ describe("list cars", () => {
             category_id: "12345",
         });
 
-        await carsRepository.create({
+        await carsRepository.save({
             name: "Tucs Power 2",
             description: "Super legal",
             daily_rate: 250,
@@ -39,7 +39,7 @@ describe("list cars", () => {
     });
 
     it("givenCarBrand_with_whenExecute_thenReturnFilteredListOfAvailableCar", async () => {
-        await carsRepository.create({
+        await carsRepository.save({
             name: "Tucs Power",
             description: "Super legal",
             daily_rate: 250,
@@ -49,7 +49,7 @@ describe("list cars", () => {
             category_id: "12345",
         });
 
-        const car2 = await carsRepository.create({
+        const car2 = await carsRepository.save({
             name: "Tucs Power 2",
             description: "Super legal",
             daily_rate: 250,
@@ -68,7 +68,7 @@ describe("list cars", () => {
     });
 
     it("givenCarName_with_whenExecute_thenReturnFilteredListOfAvailableCar", async () => {
-        const car1 = await carsRepository.create({
+        const car1 = await carsRepository.save({
             name: "Tucs Power",
             description: "Super legal",
             daily_rate: 250,
@@ -78,7 +78,7 @@ describe("list cars", () => {
             category_id: "12345",
         });
 
-        await carsRepository.create({
+        await carsRepository.save({
             name: "Tucs Power 2",
             description: "Super legal",
             daily_rate: 250,
@@ -97,7 +97,7 @@ describe("list cars", () => {
     });
 
     it("givenCategory_with_whenExecute_thenReturnFilteredListOfAvailableCar", async () => {
-        await carsRepository.create({
+        await carsRepository.save({
             name: "Tucs Power",
             description: "Super legal",
             daily_rate: 250,
@@ -107,7 +107,7 @@ describe("list cars", () => {
             category_id: "12345",
         });
 
-        const car2 = await carsRepository.create({
+        const car2 = await carsRepository.save({
             name: "Tucs Power 2",
             description: "Super legal",
             daily_rate: 250,

@@ -13,6 +13,6 @@ export class AlterUsersAddAvatar1621716374616 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        queryRunner.dropColumn("users", "avatar");
+        await queryRunner.dropColumn("users", "avatar");
     }
 }
