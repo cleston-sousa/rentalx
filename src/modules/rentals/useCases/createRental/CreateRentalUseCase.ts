@@ -47,8 +47,6 @@ class CreateRentalUseCase {
             dateNow
         );
 
-        console.log(dateCompare);
-
         if (dateCompare < minimunHour) {
             throw new AppError("invalid return time");
         }

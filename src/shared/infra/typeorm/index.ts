@@ -21,7 +21,18 @@ createConnection();
 
 // export config
 export default async (host = "database"): Promise<Connection> => {
-    const defaultOprions = await getConnectionOptions();
+    const defaultOptions = await getConnectionOptions();
 
-    return createConnection(Object.assign(defaultOprions, { host }));
+    let testOptions = {};
+
+    if (process.env.NODE_ENV === "test") {
+        testOptions = {
+            host: "localhost",
+            database: "rentx_test",
+        };
+    }
+
+    const connOptions = Object.assign(defaultOptions, { host }, testOptions);
+
+    return createConnection(connOptions);
 };

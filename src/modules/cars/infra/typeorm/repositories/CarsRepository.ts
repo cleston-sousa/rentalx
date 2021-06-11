@@ -32,7 +32,7 @@ class CarsRepository implements ICarsRepository {
         if (brand) queryBuilder.andWhere("c.brand = :brand", { brand });
         if (name) queryBuilder.andWhere("c.name = :name", { name });
 
-        const result = queryBuilder.getMany();
+        const result = await queryBuilder.getMany();
 
         return result;
     }
