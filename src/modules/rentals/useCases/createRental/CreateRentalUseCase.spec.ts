@@ -1,3 +1,5 @@
+import { ICarsRepository } from "@modules/cars/repositories/ICarsRepository";
+import { CarsRepositoryInMemory } from "@modules/cars/repositories/in-memory/CarsRepositoryInMemory";
 import { RentalsRepositoryInMemory } from "@modules/rentals/repositories/in-memory/RentalsRepositoryInMemory";
 import { IRentalsRepository } from "@modules/rentals/repositories/IRentalsRepository";
 import { CreateRentalUseCase } from "@modules/rentals/useCases/createRental/CreateRentalUseCase";
@@ -8,15 +10,29 @@ import { AppError } from "@shared/errors/AppError";
 let createRentalUseCase: CreateRentalUseCase;
 let rentalsRepository: IRentalsRepository;
 let dateProvider: IDateProvider;
+let carsRepository: ICarsRepository;
 
 describe("create rental", () => {
     beforeEach(() => {
+        carsRepository = new CarsRepositoryInMemory();
         rentalsRepository = new RentalsRepositoryInMemory();
         dateProvider = new DayjsDateProvider();
         createRentalUseCase = new CreateRentalUseCase(
             rentalsRepository,
-            dateProvider
+            dateProvider,
+            carsRepository
         );
+
+        carsRepository.save({
+            name: "test car",
+            description: "thats an awesome car",
+            daily_rate: 30,
+            license_plate: "xyz-1234",
+            fine_amount: 5,
+            brand: "lesta",
+            category_id: "nonono-nonono-nonono-nonono",
+            id: "5678",
+        });
     });
 
     it("givenCarIdUserIdExpectedDate_with_whenCreate_thenReturnRental", async () => {
@@ -31,6 +47,9 @@ describe("create rental", () => {
 
         expect(rental).toHaveProperty("id");
         expect(rental).toHaveProperty("start_date");
+
+        const rentedCar = await carsRepository.findById("5678");
+        expect(rentedCar).toHaveProperty("available", false);
     });
 
     it("givenCarIdUserIdExpectedDate_withUserIdAlreadyOpened_whenCreate_thenThrowAppError", async () => {

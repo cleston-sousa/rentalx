@@ -53,3 +53,17 @@ deve ser possivel cadastrar um aluguel
 o aluguel deve ter duracao minima de 24 horas
 nao deve ser possivel cadastrar um novo aluguel caso ja exista um aberto para o mesmo usuario
 nao deve ser possivel cadastrar um novo aluguel caso ja exista um aberto para o mesmo carro
+o usuario deve estar logado na aplicacao
+
+# devolucao de carro
+
+**rf**
+deve ser possivel realizar a devolucao de um carro
+
+**rn**
+se o carro for devolvido com menos de 24 horas devera ser cobrado diaria completa
+ao realizar a devolucao o carro devera ser liberado para outro aluguel
+ao realizar a devolucao o usuario devera ser liberado para outro aluguel
+ao realizar a devolucao devera ser calculado o valor do aluguel
+caso o horario de devolucao seja superior ao horario previsto de entrega devera ser cobrada multa proporcional aos atraso
+caso haja multa devera ser somado ao total do aluguel
