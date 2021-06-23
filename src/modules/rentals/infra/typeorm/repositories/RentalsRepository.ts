@@ -1,4 +1,4 @@
-import { getRepository, Repository } from "typeorm";
+import { getRepository, IsNull, Repository } from "typeorm";
 
 import { ICreateRentalDTO } from "@modules/rentals/dtos/ICreateRentalDTO";
 import { Rental } from "@modules/rentals/infra/typeorm/entities/Rental";
@@ -11,13 +11,27 @@ class RentalsRepository implements IRentalsRepository {
         this.repository = getRepository(Rental);
     }
 
+    async save(data: Rental): Promise<Rental> {
+        const rental = await this.repository.save(data);
+        return rental;
+    }
+
+    async findById(id: string): Promise<Rental> {
+        const rental = await this.repository.findOne(id);
+        return rental;
+    }
+
     async findOpenedRentalByCar(car_id: string): Promise<Rental> {
-        const openedByCar = await this.repository.findOne({ car_id });
+        const openedByCar = await this.repository.findOne({
+            where: { end_date: IsNull(), car_id },
+        });
         return openedByCar;
     }
 
     async findOpenedRentalByUser(user_id: string): Promise<Rental> {
-        const openedByUser = await this.repository.findOne({ user_id });
+        const openedByUser = await this.repository.findOne({
+            where: { end_date: IsNull(), user_id },
+        });
         return openedByUser;
     }
 
@@ -35,6 +49,21 @@ class RentalsRepository implements IRentalsRepository {
         await this.repository.save(newRental);
 
         return newRental;
+    }
+
+    async findOpenedRentalById(id: string): Promise<Rental> {
+        const openedByUser = await this.repository.findOne({
+            where: { end_date: IsNull(), id },
+        });
+        return openedByUser;
+    }
+
+    async findByUser(user_id: string): Promise<Rental[]> {
+        const rentals = await this.repository.find({
+            where: { user_id },
+            relations: ["car"],
+        });
+        return rentals;
     }
 }
 

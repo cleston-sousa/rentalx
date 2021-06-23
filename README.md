@@ -67,3 +67,12 @@ ao realizar a devolucao o usuario devera ser liberado para outro aluguel
 ao realizar a devolucao devera ser calculado o valor do aluguel
 caso o horario de devolucao seja superior ao horario previsto de entrega devera ser cobrada multa proporcional aos atraso
 caso haja multa devera ser somado ao total do aluguel
+o usuario deve estar logado na aplicacao
+
+# listagem de alugueis para usuario
+
+**rf**
+deve ser possivel realizar a busca de todos os alugueis para o usuario
+
+**rn**
+o usuario deve estar logado na aplicacao

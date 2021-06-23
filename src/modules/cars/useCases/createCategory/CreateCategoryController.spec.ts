@@ -11,6 +11,7 @@ let connection: Connection;
 describe("create category controller", () => {
     beforeAll(async () => {
         connection = await createConnection();
+        await connection.query("CREATE SCHEMA IF NOT EXISTS public;");
         await connection.runMigrations();
 
         const id = uuidv4();
@@ -21,7 +22,7 @@ describe("create category controller", () => {
         );
     });
     afterAll(async () => {
-        await connection.dropDatabase();
+        await connection.query("DROP SCHEMA public CASCADE;");
         await connection.close();
     });
 

@@ -59,13 +59,13 @@ describe("create rental", () => {
             expected_return_date: dateProvider.addDays(new Date(), 1),
         });
 
-        expect(async () => {
-            await createRentalUseCase.execute({
+        await expect(
+            createRentalUseCase.execute({
                 user_id: "1234",
                 car_id: "9999",
                 expected_return_date: dateProvider.addDays(new Date(), 1),
-            });
-        }).rejects.toBeInstanceOf(AppError);
+            })
+        ).rejects.toEqual(new AppError("user already have a rental opened"));
     });
 
     it("givenCarIdUserIdExpectedDate_withCarIdAlreadyOpened_whenCreate_thenThrowAppError", async () => {
@@ -75,22 +75,22 @@ describe("create rental", () => {
             expected_return_date: dateProvider.addDays(new Date(), 1),
         });
 
-        expect(async () => {
-            await createRentalUseCase.execute({
+        await expect(
+            createRentalUseCase.execute({
                 user_id: "9999",
                 car_id: "5678",
                 expected_return_date: dateProvider.addDays(new Date(), 1),
-            });
-        }).rejects.toBeInstanceOf(AppError);
+            })
+        ).rejects.toEqual(new AppError("car unavailable"));
     });
 
     it("givenCarIdUserIdExpectedDate_withLessMinimunTime_whenCreate_thenThrowAppError", async () => {
-        expect(async () => {
-            await createRentalUseCase.execute({
+        await expect(
+            createRentalUseCase.execute({
                 user_id: "9999",
                 car_id: "5678",
                 expected_return_date: dateProvider.addHours(new Date(), 20),
-            });
-        }).rejects.toBeInstanceOf(AppError);
+            })
+        ).rejects.toEqual(new AppError("minimum rent time invalid"));
     });
 });

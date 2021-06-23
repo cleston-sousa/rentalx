@@ -1,5 +1,6 @@
 import { inject, injectable } from "tsyringe";
 
+import appConfig from "@config/appConfig";
 import { ICarsRepository } from "@modules/cars/repositories/ICarsRepository";
 import { Rental } from "@modules/rentals/infra/typeorm/entities/Rental";
 import { IRentalsRepository } from "@modules/rentals/repositories/IRentalsRepository";
@@ -26,7 +27,7 @@ class CreateRentalUseCase {
         car_id,
         expected_return_date,
     }: IRequest): Promise<Rental> {
-        const minimunHour = 24;
+        const minimumDays = appConfig.minimum_rent_days;
 
         const carUnavailable =
             await this.rentalsRepository.findOpenedRentalByCar(car_id);
@@ -44,13 +45,13 @@ class CreateRentalUseCase {
 
         const dateNow = this.dateProvider.dateNow();
 
-        const dateCompare = this.dateProvider.compareInHours(
+        const dateCompare = this.dateProvider.compareInDays(
             expected_return_date,
             dateNow
         );
 
-        if (dateCompare < minimunHour) {
-            throw new AppError("invalid return time");
+        if (dateCompare < minimumDays) {
+            throw new AppError("minimum rent time invalid");
         }
 
         const rental = await this.rentalsRepository.create({

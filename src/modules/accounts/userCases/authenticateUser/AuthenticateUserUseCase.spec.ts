@@ -38,19 +38,19 @@ describe("authenticate user", () => {
         expect(result).toHaveProperty("token");
     });
 
-    it("given invalid email or password when execute then throws AppError", () => {
-        expect(async () => {
-            await authenticateUserUseCase.execute({
+    it("given invalid email or password when execute then throws AppError", async () => {
+        await expect(
+            authenticateUserUseCase.execute({
                 email: "random@email",
                 password: user.password,
-            });
-        }).rejects.toBeInstanceOf(AppError);
+            })
+        ).rejects.toEqual(new AppError("Email or password incorrect"));
 
-        expect(async () => {
-            await authenticateUserUseCase.execute({
+        await expect(
+            authenticateUserUseCase.execute({
                 email: user.email,
                 password: "random password",
-            });
-        }).rejects.toBeInstanceOf(AppError);
+            })
+        ).rejects.toEqual(new AppError("Email or password incorrect"));
     });
 });
