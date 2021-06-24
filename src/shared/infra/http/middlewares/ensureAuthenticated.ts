@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
 import { container } from "tsyringe";
 
+import auth from "@config/auth";
 import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepository";
 import { AppError } from "@shared/errors/AppError";
 
@@ -21,10 +22,11 @@ export async function ensureAuthenticated(
     const [, token] = authHeader.split(" ");
 
     try {
-        const { sub: user_id } = verify(token, "w3e4r5t6y7u8i9o0") as IPayload;
+        const { sub: user_id } = verify(token, auth.secret_token) as IPayload;
 
         const usersRepository =
             container.resolve<IUsersRepository>("usersRepository");
+
         const user = await usersRepository.findById(user_id);
 
         if (!user) throw new AppError("Invalid user", 401);
