@@ -27,7 +27,7 @@ class CreateRentalUseCase {
         car_id,
         expected_return_date,
     }: IRequest): Promise<Rental> {
-        const minimumDays = appConfig.minimum_rent_days;
+        const minimumDays = parseInt(appConfig.minimum_rent_days, 10);
 
         const carUnavailable =
             await this.rentalsRepository.findOpenedRentalByCar(car_id);

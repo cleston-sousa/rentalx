@@ -6,6 +6,17 @@ import { IDateProvider } from "@shared/container/providers/DateProvider/IDatePro
 dayjs.extend(utc);
 
 class DayjsDateProvider implements IDateProvider {
+    expired(date_to_check: Date, date_reference: Date): boolean {
+        return dayjs(date_to_check)
+            .utc()
+            .local()
+            .isBefore(dayjs(date_reference).utc().local());
+    }
+
+    addSeconds(date: Date, secondsToAdd: number): Date {
+        return dayjs(date).utc().local().add(secondsToAdd, "second").toDate();
+    }
+
     compareInDays(start_date: Date, end_date: Date): number {
         const start_date_utc = this.convertToUtc(start_date);
         const end_date_utc = this.convertToUtc(end_date);

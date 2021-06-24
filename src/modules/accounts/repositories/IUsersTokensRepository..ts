@@ -4,6 +4,8 @@ import { UserToken } from "@modules/accounts/infra/typeorm/entities/UserToken";
 interface IUsersTokensRepository {
     create(data: ICreateUserTokenDTO): Promise<UserToken>;
 
+    findByUserToken(refresh_token: string): Promise<UserToken>;
+
     findByUserId(user_id: string): Promise<UserToken[]>;
 
     deleteById(id: string): Promise<void>;
